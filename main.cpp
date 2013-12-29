@@ -7,15 +7,19 @@ using namespace std;
 
 void generate_random_matrix(int size, const string& file_name);
 void read_matrix(vector< vector<int> >& matrix, const string& filename);
+void write_matrix(vector< vector<int> >& matrix, const string& file_name);
 
 vector< vector<int> > basic_method(const vector< vector<int> >& matrixA,
                                    const vector< vector<int> >& matrixB);
 
 vector< vector<int> > vectorization_method(const vector< vector<int> >& matrixA,
-                                    const vector< vector<int> >& matrixB);
+                                            const vector< vector<int> >& matrixB);
 
 vector< vector<int> > change_calculate_order_method(const vector< vector<int> >& matrixA,
-                                    const vector< vector<int> >& matrixB);
+                                                    const vector< vector<int> >& matrixB);
+
+vector< vector<int> > divide_matrix_method(const vector< vector<int> >& matrixA,
+                                            const vector< vector<int> >& matrixB);
 
 int main()
 {
@@ -40,6 +44,7 @@ int main()
     cout << "step 1, basic method's runtime: ";
     cout << (float)difftime(end, start) / CLOCKS_PER_SEC << "s" << endl;
     cout << endl;
+    write_matrix(matrixC, "step1_result.txt");
 
 
     // run vectorization matrix multiply method
@@ -49,6 +54,7 @@ int main()
     cout << "step 2, vectorization method's runtime: ";
     cout << (float)difftime(end, start) / CLOCKS_PER_SEC << "s" << endl;
     cout << endl;
+    write_matrix(matrixC, "step2_result.txt");
 
 
     // run change calculate order matrix multiply method
@@ -58,7 +64,16 @@ int main()
     cout << "step 3, change calculate order method's runtime: ";
     cout << (float)difftime(end, start) / CLOCKS_PER_SEC << "s" << endl;
     cout << endl;
+    write_matrix(matrixC, "step3_result.txt");
 
+    // run divide matrix method
+    start = clock();
+    matrixC = change_calculate_order_method(matrixA, matrixB);
+    end = clock();
+    cout << "step 4, divide matrix method's runtime: ";
+    cout << (float)difftime(end, start) / CLOCKS_PER_SEC << "s" << endl;
+    cout << endl;
+    write_matrix(matrixC, "step4_result.txt");
 
     return 0;
 }
@@ -71,4 +86,15 @@ void read_matrix(vector< vector<int> >& matrix, const string& file_name)
             ifs >> matrix[i][j];
         }
     }
+}
+
+void write_matrix(vector< vector<int> >& matrix, const string& file_name)
+{
+    ofstream ofs(file_name.c_str());
+    for (vector<int>::size_type i = 0; i < matrix.size(); ++i) {
+        for (vector<int>::size_type j = 0; j < matrix[i].size(); ++j) {
+            ofs << matrix[i][j] << " ";
+        }
+        ofs << endl;
+    } 
 }
