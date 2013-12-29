@@ -3,10 +3,9 @@
 
 using namespace std;
 
-const int THREAD_NUM = 16;
-
 vector< vector<int> > vectorization_method(const vector< vector<int> >& matrixA,
-                                    		const vector< vector<int> >& matrixB)
+                                    		const vector< vector<int> >& matrixB,
+                                    		int thread_num)
 {
     int M = matrixA.size();
     int N = matrixA[0].size();
@@ -14,7 +13,7 @@ vector< vector<int> > vectorization_method(const vector< vector<int> >& matrixA,
 
     vector< vector<int> > matrixC(M, vector<int>(K));
     int i, j, k;
-    #pragma omp parallel for private(j, k) num_threads(THREAD_NUM)
+    #pragma omp parallel for private(j, k) num_threads(thread_num)
 	for (i = 0; i < M; i++) {
 		for (j = 0; j < N; ++j) {
 			int result = 0;

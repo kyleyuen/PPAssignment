@@ -2,10 +2,9 @@
 
 using namespace std;
 
-const int THREAD_NUM = 16;
-
 vector< vector<int> > divide_matrix_method(const vector< vector<int> >& matrixA,
-                                    		const vector< vector<int> >& matrixB)
+                                    		const vector< vector<int> >& matrixB,
+                                    		int thread_num)
 {
 	int M = matrixA.size();
     int N = matrixA[0].size();
@@ -37,7 +36,7 @@ vector< vector<int> > divide_matrix_method(const vector< vector<int> >& matrixA,
     				j_end = N - jj;
     			}
 
-    			#pragma omp parallel for private(i, j, k) num_threads(THREAD_NUM)
+    			#pragma omp parallel for private(i, j, k) num_threads(thread_num)
     			for (i = ii; i < ii + i_end; ++i) {
     				for (j = jj; j < jj + j_end; ++j) {
     					int result = 0;

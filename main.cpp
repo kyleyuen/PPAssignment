@@ -14,17 +14,21 @@ vector< vector<int> > basic_method(const vector< vector<int> >& matrixA,
                                    const vector< vector<int> >& matrixB);
 
 vector< vector<int> > vectorization_method(const vector< vector<int> >& matrixA,
-                                            const vector< vector<int> >& matrixB);
+                                            const vector< vector<int> >& matrixB,
+                                            int thread_num);
 
 vector< vector<int> > change_calculate_order_method(const vector< vector<int> >& matrixA,
-                                                    const vector< vector<int> >& matrixB);
+                                                    const vector< vector<int> >& matrixB,
+                                                    int thread_num);
 
 vector< vector<int> > divide_matrix_method(const vector< vector<int> >& matrixA,
-                                            const vector< vector<int> >& matrixB);
+                                            const vector< vector<int> >& matrixB,
+                                            int thread_num);
 
 int main()
 {
     int target_size = 1000;
+    int thread_num = 16;
 
     // generate and read matrix A
     generate_random_matrix(target_size, "matrix_a.txt");
@@ -37,6 +41,7 @@ int main()
     read_matrix(matrixB, "matrix_b.txt");
 
     double start, end;
+    double baseline, runtime;
 
     cout.setf(ios::fixed);
     cout.precision(2);
@@ -45,36 +50,43 @@ int main()
     vector< vector<int> > matrixC = basic_method(matrixA, matrixB);
     end = omp_get_wtime();
     cout << "step 1, basic method's runtime: ";
-    cout << end - start << "s" << endl;
+    baseline = end - start;
+    cout << baseline << "s" << endl;
     cout << endl;
     write_matrix(matrixC, "step1_result.txt");
 
 
     // run vectorization matrix multiply method
     start = omp_get_wtime();
-    matrixC = vectorization_method(matrixA, matrixB);
+    matrixC = vectorization_method(matrixA, matrixB, thread_num);
     end = omp_get_wtime();
     cout << "step 2, vectorization method's runtime: ";
-    cout << end - start << "s" << endl;
+    runtime = end - start;
+    cout << runtime << "s" << endl;
+    cout << "speedup ratio: " << baseline /runtime << endl;
     cout << endl;
     write_matrix(matrixC, "step2_result.txt");
 
 
     // run change calculate order matrix multiply method
     start = omp_get_wtime();
-    matrixC = change_calculate_order_method(matrixA, matrixB);
+    matrixC = change_calculate_order_method(matrixA, matrixB, thread_num);
     end = omp_get_wtime();
     cout << "step 3, change calculate order method's runtime: ";
-    cout << end - start << "s" << endl;
+    runtime = end - start;
+    cout << runtime << "s" << endl;
+    cout << "speedup ratio: " << baseline /runtime << endl;
     cout << endl;
     write_matrix(matrixC, "step3_result.txt");
 
     // run divide matrix method
     start = omp_get_wtime();
-    matrixC = change_calculate_order_method(matrixA, matrixB);
+    matrixC = change_calculate_order_method(matrixA, matrixB, thread_num);
     end = omp_get_wtime();
     cout << "step 4, divide matrix method's runtime: ";
-    cout << end - start << "s" << endl;
+    runtime = end - start;
+    cout << runtime << "s" << endl;
+    cout << "speedup ratio: " << baseline /runtime << endl;
     cout << endl;
     write_matrix(matrixC, "step4_result.txt");
 
