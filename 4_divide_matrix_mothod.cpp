@@ -52,4 +52,5 @@ vector< vector<int> > divide_matrix_method(const vector< vector<int> >& matrixA,
     		}
     	}
     }
+    return matrixC
 }
