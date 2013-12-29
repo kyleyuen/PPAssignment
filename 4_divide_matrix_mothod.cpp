@@ -2,7 +2,7 @@
 
 using namespace std;
 
-const int THREAD_NUM = 8;
+const int THREAD_NUM = 16;
 
 vector< vector<int> > divide_matrix_method(const vector< vector<int> >& matrixA,
                                     		const vector< vector<int> >& matrixB)
@@ -52,5 +52,5 @@ vector< vector<int> > divide_matrix_method(const vector< vector<int> >& matrixA,
     		}
     	}
     }
-    return matrixC
+    return matrixC;
 }

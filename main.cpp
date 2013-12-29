@@ -2,6 +2,7 @@
 #include <fstream>
 #include <vector>
 #include <ctime>
+#include <omp.h>
 
 using namespace std;
 
@@ -35,43 +36,45 @@ int main()
     vector< vector<int> > matrixB(target_size, vector<int>(target_size));
     read_matrix(matrixB, "matrix_b.txt");
 
-    clock_t start, end;
+    double start, end;
 
+    cout.setf(ios::fixed);
+    cout.precision(2);
     // run basic matrix multiply method
-    start = clock();
+    start = omp_get_wtime();
     vector< vector<int> > matrixC = basic_method(matrixA, matrixB);
-    end = clock();
+    end = omp_get_wtime();
     cout << "step 1, basic method's runtime: ";
-    cout << (float)difftime(end, start) / CLOCKS_PER_SEC << "s" << endl;
+    cout << end - start << "s" << endl;
     cout << endl;
     write_matrix(matrixC, "step1_result.txt");
 
 
     // run vectorization matrix multiply method
-    start = clock();
+    start = omp_get_wtime();
     matrixC = vectorization_method(matrixA, matrixB);
-    end = clock();
+    end = omp_get_wtime();
     cout << "step 2, vectorization method's runtime: ";
-    cout << (float)difftime(end, start) / CLOCKS_PER_SEC << "s" << endl;
+    cout << end - start << "s" << endl;
     cout << endl;
     write_matrix(matrixC, "step2_result.txt");
 
 
     // run change calculate order matrix multiply method
-    start = clock();
+    start = omp_get_wtime();
     matrixC = change_calculate_order_method(matrixA, matrixB);
-    end = clock();
+    end = omp_get_wtime();
     cout << "step 3, change calculate order method's runtime: ";
-    cout << (float)difftime(end, start) / CLOCKS_PER_SEC << "s" << endl;
+    cout << end - start << "s" << endl;
     cout << endl;
     write_matrix(matrixC, "step3_result.txt");
 
     // run divide matrix method
-    start = clock();
+    start = omp_get_wtime();
     matrixC = change_calculate_order_method(matrixA, matrixB);
-    end = clock();
+    end = omp_get_wtime();
     cout << "step 4, divide matrix method's runtime: ";
-    cout << (float)difftime(end, start) / CLOCKS_PER_SEC << "s" << endl;
+    cout << end - start << "s" << endl;
     cout << endl;
     write_matrix(matrixC, "step4_result.txt");
 

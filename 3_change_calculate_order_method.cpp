@@ -3,7 +3,7 @@
 
 using namespace std;
 
-const int THREAD_NUM = 8;
+const int THREAD_NUM = 16;
 
 vector< vector<int> > change_calculate_order_method(const vector< vector<int> >& matrixA,
                                     				const vector< vector<int> >& matrixB)
