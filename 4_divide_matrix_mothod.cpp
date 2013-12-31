@@ -2,21 +2,22 @@
 
 using namespace std;
 
-vector< vector<int> > divide_matrix_method(const vector< vector<int> >& matrixA,
-                                    		const vector< vector<int> >& matrixB,
-                                    		int thread_num)
+void divide_matrix_method(const vector< vector<int> >& matrixA,
+                    		const vector< vector<int> >& matrixB,
+                            vector< vector<int> >& matrixC,
+                    		int thread_num)
 {
 	int M = matrixA.size();
     int N = matrixA[0].size();
     int K = matrixB[0].size();
 
-    int mc = M / 4;
-    int kc = K / 4;
-    int nc = N / 4;
+    int divide_size = thread_num / 4;
+    int mc = M / divide_size;
+    int kc = K / divide_size;
+    int nc = N / divide_size;
+    
     int i, j, k;
 	int i_end, j_end, k_end;
-
-    vector< vector<int> > matrixC(M, vector<int>(K));
 
     i_end = mc;
     for (int ii = 0; ii < M; ii += mc) {
@@ -51,5 +52,4 @@ vector< vector<int> > divide_matrix_method(const vector< vector<int> >& matrixA,
     		}
     	}
     }
-    return matrixC;
 }

@@ -3,15 +3,15 @@
 
 using namespace std;
 
-vector< vector<int> > change_calculate_order_method(const vector< vector<int> >& matrixA,
-                                    				const vector< vector<int> >& matrixB,
-                                    				int thread_num)
+void change_calculate_order_method(const vector< vector<int> >& matrixA,
+                    				const vector< vector<int> >& matrixB,
+                    				vector< vector<int> >& matrixC,
+                    				int thread_num)
 {
     int M = matrixA.size();
     int N = matrixA[0].size();
     int K = matrixB[0].size();
 
-    vector< vector<int> > matrixC(M, vector<int>(K));
     int i, j, k;
     #pragma omp parallel for private(j, k) num_threads(thread_num)
 	for (i = 0; i < M; i++) {
@@ -24,6 +24,5 @@ vector< vector<int> > change_calculate_order_method(const vector< vector<int> >&
 			}
 		}
 	}
-	return matrixC;
 }
 

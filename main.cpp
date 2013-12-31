@@ -9,21 +9,26 @@ using namespace std;
 void generate_random_matrix(int size, const string& file_name);
 void read_matrix(vector< vector<int> >& matrix, const string& filename);
 void write_matrix(vector< vector<int> >& matrix, const string& file_name);
+void clean_matrix(vector< vector<int> >& matrix);
 
-vector< vector<int> > basic_method(const vector< vector<int> >& matrixA,
-                                   const vector< vector<int> >& matrixB);
+void basic_method(const vector< vector<int> >& matrixA,
+                   const vector< vector<int> >& matrixB,
+                   vector< vector<int> >& matrixC);
 
-vector< vector<int> > vectorization_method(const vector< vector<int> >& matrixA,
-                                            const vector< vector<int> >& matrixB,
-                                            int thread_num);
+void vectorization_method(const vector< vector<int> >& matrixA,
+                            const vector< vector<int> >& matrixB,
+                            vector< vector<int> >& matrixC,
+                            int thread_num);
 
-vector< vector<int> > change_calculate_order_method(const vector< vector<int> >& matrixA,
-                                                    const vector< vector<int> >& matrixB,
-                                                    int thread_num);
+void change_calculate_order_method(const vector< vector<int> >& matrixA,
+                                    const vector< vector<int> >& matrixB,
+                                    vector< vector<int> >& matrixC,
+                                    int thread_num);
 
-vector< vector<int> > divide_matrix_method(const vector< vector<int> >& matrixA,
-                                            const vector< vector<int> >& matrixB,
-                                            int thread_num);
+void divide_matrix_method(const vector< vector<int> >& matrixA,
+                            const vector< vector<int> >& matrixB,
+                            vector< vector<int> >& matrixC,
+                            int thread_num);
 
 int main()
 {
@@ -42,23 +47,25 @@ int main()
 
     double start, end;
     double baseline, runtime;
+    vector< vector<int> > matrixC(target_size, vector<int>(target_size, 0));
 
     cout.setf(ios::fixed);
     cout.precision(2);
     // run basic matrix multiply method
     start = omp_get_wtime();
-    vector< vector<int> > matrixC = basic_method(matrixA, matrixB);
+    basic_method(matrixA, matrixB, matrixC);
     end = omp_get_wtime();
     cout << "step 1, basic method's runtime: ";
     baseline = end - start;
     cout << baseline << "s" << endl;
     cout << endl;
     write_matrix(matrixC, "step1_result.txt");
+    clean_matrix(matrixC);
 
 
     // run vectorization matrix multiply method
     start = omp_get_wtime();
-    matrixC = vectorization_method(matrixA, matrixB, thread_num);
+    vectorization_method(matrixA, matrixB, matrixC, thread_num);
     end = omp_get_wtime();
     cout << "step 2, vectorization method's runtime: ";
     runtime = end - start;
@@ -66,11 +73,12 @@ int main()
     cout << "speedup ratio: " << baseline /runtime << endl;
     cout << endl;
     write_matrix(matrixC, "step2_result.txt");
+    clean_matrix(matrixC);
 
 
     // run change calculate order matrix multiply method
     start = omp_get_wtime();
-    matrixC = change_calculate_order_method(matrixA, matrixB, thread_num);
+    change_calculate_order_method(matrixA, matrixB, matrixC, thread_num);
     end = omp_get_wtime();
     cout << "step 3, change calculate order method's runtime: ";
     runtime = end - start;
@@ -78,10 +86,12 @@ int main()
     cout << "speedup ratio: " << baseline /runtime << endl;
     cout << endl;
     write_matrix(matrixC, "step3_result.txt");
+    clean_matrix(matrixC);
+
 
     // run divide matrix method
     start = omp_get_wtime();
-    matrixC = change_calculate_order_method(matrixA, matrixB, thread_num);
+    divide_matrix_method(matrixA, matrixB, matrixC, thread_num);
     end = omp_get_wtime();
     cout << "step 4, divide matrix method's runtime: ";
     runtime = end - start;
@@ -89,6 +99,7 @@ int main()
     cout << "speedup ratio: " << baseline /runtime << endl;
     cout << endl;
     write_matrix(matrixC, "step4_result.txt");
+    clean_matrix(matrixC);
 
     return 0;
 }
@@ -111,5 +122,14 @@ void write_matrix(vector< vector<int> >& matrix, const string& file_name)
             ofs << matrix[i][j] << " ";
         }
         ofs << endl;
+    } 
+}
+
+void clean_matrix(vector< vector<int> >& matrix)
+{
+    for (vector<int>::size_type i = 0; i < matrix.size(); ++i) {
+        for (vector<int>::size_type j = 0; j < matrix[i].size(); ++j) {
+            matrix[i][j] = 0;
+        }
     } 
 }
